@@ -18,21 +18,21 @@
 #define TRP(i) ((i)&0xFF)
 #define POFF(i) sext((i)&0x3F,6)
 bool running = true;
-//Начальная точка инициализации
+
 uint16_t PC_START = 0x3000;
-// Максимальная память
+
 uint16_t mem[UINT16_MAX + 1] = {0};
 
-//Чтение и запись из памяти
+
 static inline uint16_t mr(uint16_t address) { return mem[address]; }
 static inline uint16_t mw(uint16_t address, uint16_t val) { mem[address] = val; };
 
-//Регистр
+
 enum regist { R0 = 0, R1, R2, R3, R4, R5, R6, R7, RPC, RCND, RCNT };
 
 uint16_t reg[RCNT] = {0};
 
-//Сдвиг OPCode
+
 typedef void (*op_ex_f)(uint16_t instruction);
 
 enum flags { FP = 1 << 0, FZ = 1 << 1, FN = 1 << 2 };
@@ -155,11 +155,9 @@ void ld_img(char *fname, uint16_t offset) {
 }
 
 uint16_t program[] = {
-    /*mem[0x3000]=*/ 0xF026,
-    //  1111 0000 0010 0110             TRAP trp_in_u16  ;read an uint16_t from stdin and put it in R0
+    /*mem[0x3000]=*/ 0xF026,//  1111 0000 0010 0110             TRAP trp_in_u16  ;read an uint16_t from stdin and put it in R0
     /*mem[0x3002]=*/ 0x1220, //  0001 0010 0010 0000             ADD R1,R0,x0     ;add contents of R0 to R1
-    /*mem[0x3003]=*/ 0xF026,
-    //  1111 0000 0010 0110             TRAP trp_in_u16  ;read an uint16_t from stdin and put it in R0
+    /*mem[0x3003]=*/ 0xF026,//  1111 0000 0010 0110             TRAP trp_in_u16  ;read an uint16_t from stdin and put it in R0
     /*mem[0x3004]=*/ 0x1240, //  0001 0010 0010 0000             ADD R1,R1,R0     ;add contents of R0 to R1
     /*mem[0x3006]=*/ 0x1060, //  0001 0000 0110 0000             ADD R0,R1,x0     ;add contents of R1 to R0
     /*mem[0x3007]=*/ 0xF027, //  1111 0000 0010 0111             TRAP trp_out_u16;show the contents of R0 to stdout
